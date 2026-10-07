@@ -353,3 +353,24 @@ export const detections: Detection[] = [
   { id: "dt3", message: "Pouvez-vous m'envoyer un devis pour former 12 personnes ?", contact: "Youssef Alaoui", intent: "Demande de devis", confidence: 91, action: "Formulaire Formation HSE envoyé", prospect: "Youssef Alaoui" },
   { id: "dt4", message: "Je ne connais pas encore la surface exacte.", contact: "Hamza Ouazzani", intent: "Information manquante", confidence: 86, action: "Relance programmée sous 48h", prospect: "Hamza Ouazzani" },
 ];
+
+const BASE_INSTR = [
+  "Ne jamais inventer un prix.",
+  "Si une donnée obligatoire manque, ne pas générer le devis et la demander au collaborateur.",
+  "Toujours utiliser les informations les plus récentes du formulaire.",
+  "Appliquer une TVA de 20 % lorsque la prestation est taxable.",
+  "Toujours demander confirmation avant génération finale si une information a été modifiée.",
+];
+export const quoteRules: import("./types").QuoteRule[] = [
+  { id: "r1", service: "Audit Hygiène", formId: "f-hyg", requiredFields: ["Raison sociale", "Surface / participants", "Secteur"], fromProspect: ["Nom", "Société", "Email", "Ville"], fromForm: ["Surface / participants", "Secteur", "Date souhaitée"], askIfMissing: ["Nombre de sites"], calcMode: "Par site", quantity: "Nombre de sites (défaut 1)", unit: "jour d'audit", unitPrice: 8500, tva: 20, discountAllowed: true, maxDiscount: 10, paymentTerms: "50% à la commande, solde à la livraison du rapport.", validity: "30 jours", delay: "10 jours ouvrés", mentions: "Audit réalisé selon le référentiel HACCP.", notes: "Rapport livré sous 5 jours après la visite.", template: "Moderne", instructions: ["Pour un audit avec plusieurs sites, créer une ligne par site.", "Si le nombre de sites manque, demander l'information avant génération.", ...BASE_INSTR] },
+  { id: "r2", service: "Audit Environnement", formId: "f-env", requiredFields: ["Raison sociale", "Ville", "Secteur"], fromProspect: ["Nom", "Société", "Email"], fromForm: ["Site concerné", "Certification visée"], askIfMissing: ["Types de déchets"], calcMode: "Par jour", quantity: "2 jours minimum", unit: "jour d'audit", unitPrice: 12000, tva: 20, discountAllowed: false, maxDiscount: 0, paymentTerms: "40% à la commande, 60% à la remise du rapport.", validity: "45 jours", delay: "15 jours ouvrés", mentions: "Diagnostic conforme à la loi 11-03.", notes: "", template: "Classique", instructions: [...BASE_INSTR] },
+  { id: "r3", service: "Formation HSE", formId: "f-hse", requiredFields: ["Surface / participants", "Date souhaitée"], fromProspect: ["Nom", "Société", "Email"], fromForm: ["Nombre de participants", "Module", "Format"], askIfMissing: ["Lieu de formation"], calcMode: "Par participant", quantity: "Nombre de participants", unit: "participant", unitPrice: 650, tva: 20, discountAllowed: true, maxDiscount: 15, paymentTerms: "100% avant la session.", validity: "30 jours", delay: "Session sous 3 semaines", mentions: "Attestation OFPPT délivrée à chaque participant.", notes: "6 à 15 participants par session.", template: "Moderne", instructions: ["Au-delà de 15 participants, prévoir deux sessions.", ...BASE_INSTR] },
+  { id: "r4", service: "Accompagnement conformité", formId: "f-conf", requiredFields: ["Raison sociale", "Secteur"], fromProspect: ["Nom", "Société", "Email"], fromForm: ["Référentiels", "Non-conformités connues"], askIfMissing: ["Durée d'accompagnement"], calcMode: "Par unité", quantity: "Durée en mois (min. 3)", unit: "mois", unitPrice: 15000, tva: 20, discountAllowed: true, maxDiscount: 5, paymentTerms: "Facturation mensuelle à terme échu.", validity: "30 jours", delay: "Démarrage sous 2 semaines", mentions: "Engagement minimum de 3 mois.", notes: "", template: "Minimal", instructions: [...BASE_INSTR] },
+  { id: "r5", service: "Autre prestation", formId: "f-custom", requiredFields: ["Besoin"], fromProspect: ["Nom", "Société", "Email"], fromForm: ["Décrivez votre besoin"], askIfMissing: ["Budget estimé"], calcMode: "Forfait", quantity: "1", unit: "forfait", unitPrice: 0, tva: 20, discountAllowed: false, maxDiscount: 0, paymentTerms: "À définir.", validity: "15 jours", delay: "À définir", mentions: "", notes: "Validation humaine obligatoire.", template: "Classique", instructions: ["Ne jamais générer sans validation d'un collaborateur.", ...BASE_INSTR] },
+];
+
+export const reminders: import("./types").Reminder[] = [
+  { id: "rm1", days: 3, enabled: true, channel: "Email", message: "Bonjour {prénom}, avez-vous pu prendre connaissance de notre devis {référence} ? Je reste disponible pour toute question." },
+  { id: "rm2", days: 4, enabled: true, channel: "WhatsApp", message: "Bonjour {prénom} 👋 Petit rappel concernant le devis {référence}. Souhaitez-vous que nous planifiions l'intervention ?" },
+  { id: "rm3", days: 8, enabled: true, channel: "Email", message: "Bonjour {prénom}, notre offre {référence} arrive bientôt à échéance. N'hésitez pas à revenir vers moi pour la valider." },
+];

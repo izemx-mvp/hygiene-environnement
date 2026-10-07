@@ -14,6 +14,8 @@ import type {
   Quote,
   QuoteStatus,
   Service,
+  QuoteRule,
+  Reminder,
 } from "./types";
 
 export interface State {
@@ -31,6 +33,10 @@ export interface State {
   aiExchanges: typeof M.aiExchanges;
   detections: typeof M.detections;
   company: Record<string, string>;
+  quoteRules: QuoteRule[];
+  reminders: Reminder[];
+  autoStop: boolean;
+  stoppedSequences: string[];
 }
 
 let state: State = {
@@ -47,6 +53,10 @@ let state: State = {
   kbInfos: M.kbInfos,
   aiExchanges: M.aiExchanges,
   detections: M.detections,
+  quoteRules: M.quoteRules,
+  reminders: M.reminders,
+  autoStop: true,
+  stoppedSequences: [],
   company: {
     name: "HygiEnv Maroc SARL",
     address: "45 Boulevard d'Anfa, 20250 Casablanca",
@@ -180,7 +190,7 @@ export const actions = {
 
   generateQuote(prospectId: string) {
     const p = state.prospects.find((x) => x.id === prospectId)!;
-    const svc = state.services.find((s) => s.name === p.service)!;
+    const rule = state.quoteRules.find((r) => r.service === p.service) ?? state.quoteRules[0];
     const n = 41 + state.quotes.length - 9 + 1;
     const qty = p.service === "Formation HSE" ? parseInt(p.collected?.["Surface / participants"] ?? "10") || 10 : 2;
     const q: Quote = {
@@ -192,18 +202,18 @@ export const actions = {
       email: p.email,
       service: p.service,
       lines: [
-        { id: uid("l"), desc: `${svc.name} — ${svc.unit}`, qty, price: svc.basePrice },
+        { id: uid("l"), desc: `${p.service} — ${rule.unit}`, qty: rule.calcMode === "Forfait" ? 1 : qty, price: rule.unitPrice },
         { id: uid("l"), desc: "Rapport détaillé & plan d'action", qty: 1, price: 2500 },
         { id: uid("l"), desc: `Frais de déplacement — ${p.city}`, qty: 1, price: p.city === "Casablanca" ? 0 : 1200 },
       ],
       discount: 0,
-      tva: 20,
+      tva: rule.tva,
       status: "À valider",
       date: now(),
-      conditions: "50% à la commande, solde à la livraison du rapport.",
-      delay: "15 jours ouvrés",
-      validity: "30 jours",
-      notes: "",
+      conditions: rule.paymentTerms,
+      delay: rule.delay,
+      validity: rule.validity,
+      notes: [rule.notes, rule.mentions].filter(Boolean).join(" — "),
     };
     set((s) => ({ quotes: [q, ...s.quotes] }));
     patchProspect(prospectId, { status: "Devis généré" });
@@ -217,13 +227,24 @@ export const actions = {
     log("Devis", `Devis ${nq.ref} créé`, "Imane El Bijri", nq.client, "Brouillon");
     return nq;
   },
+  stopSequence(id: string, reason: string) {
+    if (state.stoppedSequences.includes(id)) return;
+    const q = state.quotes.find((x) => x.id === id);
+    set((s) => ({ stoppedSequences: [...s.stoppedSequences, id] }));
+    if (q) log("Email", "Relances arrêtées", "Système", q.client, `${q.ref} · ${reason}`);
+  },
+  setAutoStop: (v: boolean) => set(() => ({ autoStop: v })),
+  setReminders: (r: Reminder[]) => set(() => ({ reminders: r })),
   saveQuote(q: Quote, status?: QuoteStatus) {
     const nq = { ...q, status: status ?? (q.status === "Brouillon" ? "Brouillon" : "Modifié") };
     set((s) => ({ quotes: s.quotes.map((x) => (x.id === q.id ? nq : x)) }));
+    if (nq.status === "Modifié") actions.stopSequence(q.id, "nouvelle version du devis");
+    if (nq.status === "Validé" && state.autoStop) actions.stopSequence(q.id, "devis validé");
     log("Devis", status === "Validé" ? `Devis ${q.ref} validé` : `Devis ${q.ref} modifié`, "Imane El Bijri", q.client, nq.status);
   },
   setQuoteStatus(id: string, status: QuoteStatus) {
     const q = state.quotes.find((x) => x.id === id)!;
+    if (["Accepté", "Refusé", "Modifié"].includes(status) || (status === "Validé" && state.autoStop)) actions.stopSequence(id, `Devis ${status.toLowerCase()}`);
     set((s) => ({ quotes: s.quotes.map((x) => (x.id === id ? { ...x, status } : x)) }));
     log("Devis", `Devis ${q.ref} → ${status}`, "Imane El Bijri", q.client, status);
   },
@@ -234,6 +255,9 @@ export const actions = {
     const q = state.quotes.find((x) => x.id === id)!;
     set((s) => ({ quotes: s.quotes.map((x) => (x.id === id ? { ...x, status: "Envoyé" } : x)) }));
     if (q.prospectId) patchProspect(q.prospectId, { status: "Devis envoyé" });
+    set((s) => ({ stoppedSequences: s.stoppedSequences.filter((x) => x !== id) }));
+    const on = state.reminders.filter((r) => r.enabled);
+    if (on.length) log("Email", "Relances programmées", "Système", q.client, on.map((r, i) => `R${i + 1} J+${on.slice(0, i + 1).reduce((a, x) => a + x.days, 0)}`).join(" · "));
     notify("Devis envoyé", "Devis envoyé par email", `${q.ref} envoyé à ${to}`, `/quotes/${q.id}`);
     log("Email", "Email envoyé au client", "Imane El Bijri", q.client, `${q.ref} → ${to}`);
   },
@@ -273,14 +297,14 @@ export const actions = {
   markAllNotifs: () => set((s) => ({ notifications: s.notifications.map((n) => ({ ...n, read: true })) })),
   deleteNotif: (id: string) => set((s) => ({ notifications: s.notifications.filter((n) => n.id !== id) })),
 
-  upsert<K extends "faqs" | "kbDocs" | "kbInfos" | "forms" | "services">(key: K, item: State[K][number]) {
+  upsert<K extends "faqs" | "kbDocs" | "kbInfos" | "forms" | "services" | "quoteRules" | "reminders">(key: K, item: State[K][number]) {
     set((s) => {
       const list = s[key] as { id: string }[];
       const exists = list.some((x) => x.id === item.id);
       return { [key]: exists ? list.map((x) => (x.id === item.id ? item : x)) : [item, ...list] } as Partial<State>;
     });
   },
-  remove<K extends "faqs" | "kbDocs" | "kbInfos" | "forms" | "services">(key: K, id: string) {
+  remove<K extends "faqs" | "kbDocs" | "kbInfos" | "forms" | "services" | "quoteRules" | "reminders">(key: K, id: string) {
     set((s) => ({ [key]: (s[key] as { id: string }[]).filter((x) => x.id !== id) }) as Partial<State>);
   },
   patchDetection: (id: string, p: Partial<State["detections"][number]>) =>
