@@ -21,6 +21,8 @@ import { Route as AppProspectionHistoryRouteImport } from './routes/_app.prospec
 import { Route as AppQuoteGeneratorRouteImport } from './routes/_app.quote-generator'
 import { Route as AppServiceClientRouteImport } from './routes/_app.service-client'
 import { Route as AppServicesRouteImport } from './routes/_app.services'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as FCodeRouteImport } from './routes/f.$code'
 import { Route as AppFormsIndexRouteImport } from './routes/_app.forms.index'
 import { Route as AppFormsIdRouteImport } from './routes/_app.forms.$id'
 import { Route as AppProspectsIndexRouteImport } from './routes/_app.prospects.index'
@@ -87,6 +89,16 @@ const AppServicesRoute = AppServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const FCodeRoute = FCodeRouteImport.update({
+  id: '/f/$code',
+  path: '/f/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppFormsIndexRoute = AppFormsIndexRouteImport.update({
   id: '/forms/',
   path: '/forms/',
@@ -130,6 +142,8 @@ export interface FileRoutesByFullPath {
   '/quote-generator': typeof AppQuoteGeneratorRoute
   '/service-client': typeof AppServiceClientRoute
   '/services': typeof AppServicesRoute
+  '/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
   '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
   '/quotes/$id': typeof AppQuotesIdRoute
@@ -149,6 +163,8 @@ export interface FileRoutesByTo {
   '/quote-generator': typeof AppQuoteGeneratorRoute
   '/service-client': typeof AppServiceClientRoute
   '/services': typeof AppServicesRoute
+  '/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
   '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
   '/quotes/$id': typeof AppQuotesIdRoute
@@ -170,6 +186,8 @@ export interface FileRoutesById {
   '/_app/quote-generator': typeof AppQuoteGeneratorRoute
   '/_app/service-client': typeof AppServiceClientRoute
   '/_app/services': typeof AppServicesRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
   '/_app/forms/$id': typeof AppFormsIdRoute
   '/_app/prospects/$id': typeof AppProspectsIdRoute
   '/_app/quotes/$id': typeof AppQuotesIdRoute
@@ -191,6 +209,8 @@ export interface FileRouteTypes {
     | '/quote-generator'
     | '/service-client'
     | '/services'
+    | '/settings'
+    | '/f/$code'
     | '/forms/$id'
     | '/prospects/$id'
     | '/quotes/$id'
@@ -210,6 +230,8 @@ export interface FileRouteTypes {
     | '/quote-generator'
     | '/service-client'
     | '/services'
+    | '/settings'
+    | '/f/$code'
     | '/forms/$id'
     | '/prospects/$id'
     | '/quotes/$id'
@@ -230,6 +252,8 @@ export interface FileRouteTypes {
     | '/_app/quote-generator'
     | '/_app/service-client'
     | '/_app/services'
+    | '/_app/settings'
+    | '/f/$code'
     | '/_app/forms/$id'
     | '/_app/prospects/$id'
     | '/_app/quotes/$id'
@@ -241,6 +265,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  FCodeRoute: typeof FCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -329,6 +354,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppServicesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/f/$code': {
+      id: '/f/$code'
+      path: '/f/$code'
+      fullPath: '/f/$code'
+      preLoaderRoute: typeof FCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/forms/': {
       id: '/_app/forms/'
       path: '/forms'
@@ -385,6 +424,7 @@ interface AppRouteChildren {
   AppQuoteGeneratorRoute: typeof AppQuoteGeneratorRoute
   AppServiceClientRoute: typeof AppServiceClientRoute
   AppServicesRoute: typeof AppServicesRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppFormsIdRoute: typeof AppFormsIdRoute
   AppProspectsIdRoute: typeof AppProspectsIdRoute
   AppQuotesIdRoute: typeof AppQuotesIdRoute
@@ -404,6 +444,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppQuoteGeneratorRoute: AppQuoteGeneratorRoute,
   AppServiceClientRoute: AppServiceClientRoute,
   AppServicesRoute: AppServicesRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppFormsIdRoute: AppFormsIdRoute,
   AppProspectsIdRoute: AppProspectsIdRoute,
   AppQuotesIdRoute: AppQuotesIdRoute,
@@ -417,6 +458,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  FCodeRoute: FCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
