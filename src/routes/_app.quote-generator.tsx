@@ -142,7 +142,7 @@ function Page() {
               <AccordionContent className="grid gap-4 p-1 md:grid-cols-2">
                 <div className="space-y-1.5">
                   <Label>Formulaire associé</Label>
-                  <Select value={r.formId} onValueChange={(v) => up({ formId: v })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{forms.map((f) => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}</SelectContent></Select>
+                  <Select value={r.formId} onValueChange={(v) => up({ formId: v })}><SelectTrigger><SelectValue>{forms.find((f) => f.id === r.formId)?.name ?? "—"}</SelectValue></SelectTrigger><SelectContent>{forms.map((f) => <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>)}</SelectContent></Select>
                 </div>
                 <TagField label="Champs obligatoires avant génération" values={r.requiredFields} onChange={(v) => up({ requiredFields: v })} hint="Sans eux, l'Agent ne génère pas le devis." />
                 <TagField label="Informations depuis la fiche prospect" values={r.fromProspect} onChange={(v) => up({ fromProspect: v })} />
@@ -153,7 +153,7 @@ function Page() {
             <AccordionItem value="calc">
               <AccordionTrigger>Calcul & tarification</AccordionTrigger>
               <AccordionContent className="grid gap-4 p-1 md:grid-cols-3">
-                <div className="space-y-1.5"><Label>Mode de calcul</Label><Select value={r.calcMode} onValueChange={(v) => up({ calcMode: v as QuoteRule["calcMode"] })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{CALC.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select></div>
+                <div className="space-y-1.5"><Label>Mode de calcul</Label><Select value={r.calcMode} onValueChange={(v) => up({ calcMode: v as QuoteRule["calcMode"] })}><SelectTrigger><SelectValue>{r.calcMode}</SelectValue></SelectTrigger><SelectContent>{CALC.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select></div>
                 <div className="space-y-1.5"><Label>Quantité</Label><Input value={r.quantity} onChange={(e) => up({ quantity: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Unité</Label><Input value={r.unit} onChange={(e) => up({ unit: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Prix unitaire HT (MAD)</Label><Input type="number" min={0} value={r.unitPrice} onChange={(e) => up({ unitPrice: Math.max(0, +e.target.value) })} /></div>
@@ -175,7 +175,7 @@ function Page() {
                 <div className="space-y-1.5 md:col-span-3"><Label>Conditions de paiement</Label><Input value={r.paymentTerms} onChange={(e) => up({ paymentTerms: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Durée de validité</Label><Input value={r.validity} onChange={(e) => up({ validity: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Délais</Label><Input value={r.delay} onChange={(e) => up({ delay: e.target.value })} /></div>
-                <div className="space-y-1.5"><Label>Template de devis</Label><Select value={r.template} onValueChange={(v) => up({ template: v })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{["Moderne", "Classique", "Minimal"].map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select></div>
+                <div className="space-y-1.5"><Label>Template de devis</Label><Select value={r.template} onValueChange={(v) => up({ template: v })}><SelectTrigger><SelectValue>{r.template}</SelectValue></SelectTrigger><SelectContent>{["Moderne", "Classique", "Minimal"].map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent></Select></div>
                 <div className="space-y-1.5 md:col-span-3"><Label>Mentions obligatoires</Label><Textarea rows={2} value={r.mentions} onChange={(e) => up({ mentions: e.target.value })} /></div>
                 <div className="space-y-1.5 md:col-span-3"><Label>Notes à afficher</Label><Textarea rows={2} value={r.notes} onChange={(e) => up({ notes: e.target.value })} /></div>
               </AccordionContent>

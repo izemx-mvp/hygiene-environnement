@@ -84,7 +84,7 @@ function Editor() {
                 <div className="space-y-1.5"><Label>Client</Label><Input value={q.client} onChange={(e) => up({ client: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Société</Label><Input value={q.company} onChange={(e) => up({ company: e.target.value })} /></div>
                 <div className="space-y-1.5"><Label>Email</Label><Input value={q.email} onChange={(e) => up({ email: e.target.value })} /></div>
-                <div className="space-y-1.5"><Label>Prestation</Label><Select value={q.service} onValueChange={(v) => up({ service: v })}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>{SERVICES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
+                <div className="space-y-1.5"><Label>Prestation</Label><Select value={q.service} onValueChange={(v) => up({ service: v })}><SelectTrigger><SelectValue>{q.service}</SelectValue></SelectTrigger><SelectContent>{SERVICES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select></div>
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="lines">
