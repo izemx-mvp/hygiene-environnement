@@ -2,7 +2,7 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Briefcase, Eye, Link2, Pencil } from "lucide-react";
 import { toast } from "sonner";
-import { actions, mad, useStore } from "@/lib/store";
+import { actions, useStore } from "@/lib/store";
 import { PageHeader, StatusBadge } from "@/components/app/bits";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -44,9 +44,8 @@ function Page() {
               <div className="flex-1"><div className="flex items-center gap-2"><h3 className="font-semibold">{s.name}</h3><StatusBadge status={s.active ? "Actif" : "Inactif"} /></div><p className="mt-1 text-sm text-muted-foreground">{s.description}</p></div>
               <Switch checked={s.active} onCheckedChange={(v) => { actions.upsert("services", { ...s, active: v }); toast.success(v ? "Prestation activée" : "Prestation désactivée"); }} />
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-3 text-sm">
+            <div className="mt-5 grid grid-cols-2 gap-3 text-sm">
               <div className="rounded-xl bg-muted/60 p-3"><p className="text-[11px] text-muted-foreground">Formulaire</p><p className="truncate font-semibold">{forms.find((f) => f.id === s.formId)?.name}</p></div>
-              <div className="rounded-xl bg-muted/60 p-3"><p className="text-[11px] text-muted-foreground">Tarif de base</p><p className="font-semibold">{mad(s.basePrice)}</p></div>
               <div className="rounded-xl bg-muted/60 p-3"><p className="text-[11px] text-muted-foreground">Prospects</p><p className="font-semibold">{prospects.filter((p) => p.service === s.name).length}</p></div>
             </div>
             <p className="mt-3 text-xs text-muted-foreground">Conditions : {s.conditions}</p>
@@ -61,7 +60,7 @@ function Page() {
       <Sheet open={!!view} onOpenChange={(o) => !o && setView(null)}>
         <SheetContent>
           <SheetHeader><SheetTitle>{view?.name}</SheetTitle></SheetHeader>
-          {view && <div className="space-y-4 p-4 text-sm"><p>{view.description}</p><p><b>Conditions :</b> {view.conditions}</p><p><b>Tarif :</b> {mad(view.basePrice)} / {view.unit}</p>
+          {view && <div className="space-y-4 p-4 text-sm"><p>{view.description}</p><p><b>Conditions :</b> {view.conditions}</p>
             <div><p className="mb-2 font-semibold">Prospects associés</p>{prospects.filter((p) => p.service === view.name).map((p) => <div key={p.id} className="flex justify-between border-b py-2"><span>{p.name}</span><StatusBadge status={p.status} /></div>)}</div></div>}
         </SheetContent>
       </Sheet>
@@ -72,7 +71,6 @@ function Page() {
             <div className="space-y-1.5"><Label>Nom</Label><Input value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>Description</Label><Textarea value={edit.description} onChange={(e) => setEdit({ ...edit, description: e.target.value })} /></div>
             <div className="space-y-1.5"><Label>Conditions</Label><Input value={edit.conditions} onChange={(e) => setEdit({ ...edit, conditions: e.target.value })} /></div>
-            <div className="grid grid-cols-2 gap-3"><div className="space-y-1.5"><Label>Tarif (MAD)</Label><Input type="number" value={edit.basePrice} onChange={(e) => setEdit({ ...edit, basePrice: +e.target.value })} /></div><div className="space-y-1.5"><Label>Unité</Label><Input value={edit.unit} onChange={(e) => setEdit({ ...edit, unit: e.target.value })} /></div></div>
           </div>}
           <DialogFooter><Button variant="ghost" onClick={() => setEdit(null)}>Annuler</Button><Button variant="premium" onClick={() => { actions.upsert("services", edit!); toast.success("Prestation mise à jour"); setEdit(null); }}>Enregistrer</Button></DialogFooter>
         </DialogContent>

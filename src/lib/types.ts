@@ -198,3 +198,35 @@ export interface Detection {
   action: string;
   prospect: string;
 }
+
+export interface QuoteRule {
+  id: string;
+  service: string;
+  formId: string;
+  requiredFields: string[];
+  fromProspect: string[];
+  fromForm: string[];
+  askIfMissing: string[];
+  calcMode: "Forfait" | "Par unité" | "Par site" | "Par participant" | "Par jour";
+  quantity: string;
+  unit: string;
+  unitPrice: number;
+  tva: number;
+  discountAllowed: boolean;
+  maxDiscount: number;
+  paymentTerms: string;
+  validity: string;
+  delay: string;
+  mentions: string;
+  notes: string;
+  template: string;
+  instructions: string[];
+}
+
+export interface Reminder {
+  id: string;
+  days: number;
+  enabled: boolean;
+  channel: "Email" | "WhatsApp";
+  message: string;
+}

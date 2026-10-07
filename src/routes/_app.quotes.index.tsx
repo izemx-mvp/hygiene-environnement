@@ -71,7 +71,7 @@ function Page() {
   );
   return (
     <div>
-      <PageHeader title="Devis" subtitle={`${rows.length} devis · ${mad(total)} TTC`} actions={<Button variant="premium" onClick={newQuote}><Plus /> Nouveau devis</Button>} />
+      <PageHeader title="Devis" subtitle={`${rows.length} devis · ${mad(total)} TTC`} />
       <div className="card-premium mb-4 flex flex-wrap gap-2 p-3">
         <div className="relative min-w-56 flex-1"><Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" /><Input className="pl-9" placeholder="Référence, client, société..." value={q} onChange={(e) => { setQ(e.target.value); setPage(0); }} /></div>
         <Select value={st} onValueChange={(v) => { setSt(v); setPage(0); }}><SelectTrigger className="w-40 bg-card"><SelectValue /></SelectTrigger><SelectContent><SelectItem value={ALL}>Tous statuts</SelectItem>{STATUSES.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent></Select>

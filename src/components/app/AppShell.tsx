@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
 import {
-  Activity, Bell, BookOpen, Bot, ChevronLeft, ClipboardList, FileSpreadsheet, FileText, History, LayoutDashboard,
-  LogOut, Mail, Menu, MessageCircle, Plus, Search, Settings, Users, Wand2, Briefcase, User, Droplets,
+  Activity, Bell, BookOpen, ChevronLeft, ClipboardList, FileSpreadsheet, FileText, LayoutDashboard,
+  LogOut, Mail, Menu, Plus, Search, Settings, Users, Wand2, Briefcase, User, Droplets,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -25,21 +25,16 @@ import { SERVICES } from "@/lib/mock";
 type NavItem = { to: string; label: string; icon: typeof Bell };
 const NAV: { group?: string; items: NavItem[] }[] = [
   { items: [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard }] },
-  { group: "WhatsApp & IA", items: [
-    { to: "/conversations", label: "Conversations", icon: MessageCircle },
-    { to: "/service-client", label: "Service Client IA", icon: Bot },
-    { to: "/knowledge", label: "Base de connaissances", icon: BookOpen },
-  ] },
-  { group: "Prospection", items: [
+  { group: "Service Client & Prospection IA", items: [
     { to: "/prospects", label: "Prospects", icon: Users },
     { to: "/forms", label: "Formulaires", icon: ClipboardList },
     { to: "/services", label: "Prestations", icon: Briefcase },
-    { to: "/prospection-history", label: "Historique & Détection IA", icon: History },
+    { to: "/knowledge", label: "Base de connaissances", icon: BookOpen },
   ] },
   { group: "Devis", items: [
-    { to: "/quote-generator", label: "Générateur de devis", icon: Wand2 },
+    { to: "/quote-generator", label: "Configuration Générateur de Devis IA", icon: Wand2 },
     { to: "/quotes", label: "Devis", icon: FileSpreadsheet },
-    { to: "/email", label: "Envoi email", icon: Mail },
+    { to: "/email", label: "Envoi email & Relances", icon: Mail },
   ] },
   { group: "Système", items: [
     { to: "/notifications", label: "Notifications", icon: Bell },
@@ -53,7 +48,6 @@ function SidebarBody({ collapsed, onNav }: { collapsed: boolean; onNav?: () => v
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const unread = useStore((s) => s.notifications.filter((n) => !n.read).length);
-  const unreadConv = useStore((s) => s.conversations.reduce((a, c) => a + c.unread, 0));
   return (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className={cn("flex h-16 items-center gap-3 px-5", collapsed && "justify-center px-0")}>
@@ -72,7 +66,7 @@ function SidebarBody({ collapsed, onNav }: { collapsed: boolean; onNav?: () => v
             <div className="space-y-0.5">
               {g.items.map((it) => {
                 const active = pathname === it.to || pathname.startsWith(it.to + "/");
-                const badge = it.to === "/notifications" ? unread : it.to === "/conversations" ? unreadConv : 0;
+                const badge = it.to === "/notifications" ? unread : 0;
                 const link = (
                   <Link
                     key={it.to}
@@ -239,39 +233,6 @@ export function NewProspectDialog({ open, onOpenChange }: { open: boolean; onOpe
   );
 }
 
-function NewConvDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
-  const navigate = useNavigate();
-  const [f, setF] = useState({ name: "", company: "", phone: "", text: "Bonjour, je suis Imane de HygiEnv Maroc. Comment pouvons-nous vous aider ?" });
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader><DialogTitle>Nouvelle conversation WhatsApp</DialogTitle></DialogHeader>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="space-y-1.5"><Label>Nom *</Label><Input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></div>
-          <div className="space-y-1.5"><Label>Société</Label><Input value={f.company} onChange={(e) => setF({ ...f, company: e.target.value })} /></div>
-          <div className="col-span-2 space-y-1.5"><Label>Numéro WhatsApp *</Label><Input value={f.phone} placeholder="+212 6..." onChange={(e) => setF({ ...f, phone: e.target.value })} /></div>
-          <div className="col-span-2 space-y-1.5"><Label>Premier message</Label><Textarea value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} /></div>
-        </div>
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)}>Annuler</Button>
-          <Button
-            variant="premium"
-            onClick={() => {
-              if (!f.name.trim() || !f.phone.trim()) return toast.error("Nom et numéro requis");
-              const c = actions.newConversation(f.name, f.company || "Particulier", f.phone, f.text);
-              toast.success("Conversation démarrée");
-              onOpenChange(false);
-              navigate({ to: "/conversations", search: { c: c.id } as never });
-            }}
-          >
-            <MessageCircle /> Démarrer
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
 const LABELS: Record<string, string> = Object.fromEntries(ALL.map((a) => [a.to.slice(1), a.label]));
 
 export function AppShell({ children }: { children: ReactNode }) {
@@ -279,7 +240,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [mobile, setMobile] = useState(false);
   const [cmd, setCmd] = useState(false);
   const [np, setNp] = useState(false);
-  const [nc, setNc] = useState(false);
   const { pathname } = useLocation();
   const prospects = useStore((s) => s.prospects);
   const quotes = useStore((s) => s.quotes);
@@ -337,7 +297,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             <div className="hidden items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-2.5 py-1 text-xs font-semibold text-success xl:flex">
               <span className="size-1.5 animate-pulse rounded-full bg-success" /> Agents IA en ligne
             </div>
-            <Button variant="outline" size="sm" className="hidden md:inline-flex" onClick={() => setNc(true)}><MessageCircle /> Conversation</Button>
             <Button variant="premium" size="sm" className="hidden sm:inline-flex" onClick={() => setNp(true)}><Plus /> Nouveau prospect</Button>
             <NotifPopover />
             <div className="hidden size-8 place-items-center rounded-full bg-gradient-primary text-[11px] font-bold text-primary-foreground md:grid">IE</div>
@@ -347,7 +306,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
       <CmdK open={cmd} setOpen={setCmd} />
       <NewProspectDialog open={np} onOpenChange={setNp} />
-      <NewConvDialog open={nc} onOpenChange={setNc} />
     </TooltipProvider>
   );
 }

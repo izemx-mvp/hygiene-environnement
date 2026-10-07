@@ -48,7 +48,7 @@ function Dashboard() {
   }, [prospects, convs, quotes]);
 
   const kpis = [
-    { label: "Nouvelles conversations", v: sc(counts.conv, 142), d: "+18%", icon: MessageCircle, to: "/conversations" },
+    { label: "Nouvelles conversations", v: sc(counts.conv, 142), d: "+18%", icon: MessageCircle, to: "/prospects" },
     { label: "Prospects créés", v: sc(counts.prospects, 64), d: "+12%", icon: UserPlus, to: "/prospects" },
     { label: "Formulaires envoyés", v: sc(counts.sent, 51), d: "+9%", icon: Send, to: "/forms" },
     { label: "Formulaires complétés", v: sc(counts.done, 42), d: "+15%", icon: ClipboardCheck, to: "/prospects" },
@@ -137,7 +137,7 @@ function Dashboard() {
             {[
               { n: missing, t: "dossiers avec informations manquantes", icon: AlertTriangle, to: "/prospects", tone: "text-warning-foreground bg-warning/15" },
               { n: toValidate, t: "devis à valider", icon: FileText, to: "/quotes", tone: "text-primary bg-primary/10" },
-              { n: toTake, t: "conversations à reprendre manuellement", icon: Headphones, to: "/conversations", tone: "text-destructive bg-destructive/10" },
+              { n: toTake, t: "interventions humaines demandées", icon: Headphones, to: "/notifications", tone: "text-destructive bg-destructive/10" },
             ].map((a) => (
               <button key={a.t} onClick={() => navigate({ to: a.to })} className="card-hover flex w-full items-center gap-3 rounded-xl border p-3 text-left">
                 <div className={cn("grid size-10 place-items-center rounded-xl", a.tone)}><a.icon className="size-4" /></div>
