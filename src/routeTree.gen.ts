@@ -11,12 +11,24 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppActivityRouteImport } from './routes/_app.activity'
 import { Route as AppConversationsRouteImport } from './routes/_app.conversations'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppEmailRouteImport } from './routes/_app.email'
 import { Route as AppKnowledgeRouteImport } from './routes/_app.knowledge'
+import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
+import { Route as AppProspectionHistoryRouteImport } from './routes/_app.prospection-history'
+import { Route as AppQuoteGeneratorRouteImport } from './routes/_app.quote-generator'
 import { Route as AppServiceClientRouteImport } from './routes/_app.service-client'
+import { Route as AppServicesRouteImport } from './routes/_app.services'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as FCodeRouteImport } from './routes/f.$code'
+import { Route as AppFormsIndexRouteImport } from './routes/_app.forms.index'
+import { Route as AppFormsIdRouteImport } from './routes/_app.forms.$id'
 import { Route as AppProspectsIndexRouteImport } from './routes/_app.prospects.index'
 import { Route as AppProspectsIdRouteImport } from './routes/_app.prospects.$id'
+import { Route as AppQuotesIndexRouteImport } from './routes/_app.quotes.index'
+import { Route as AppQuotesIdRouteImport } from './routes/_app.quotes.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -26,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppRoute = AppRouteImport.update({
   id: '/_app',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppActivityRoute = AppActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppConversationsRoute = AppConversationsRouteImport.update({
   id: '/conversations',
@@ -37,14 +54,59 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppEmailRoute = AppEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppKnowledgeRoute = AppKnowledgeRouteImport.update({
   id: '/knowledge',
   path: '/knowledge',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProspectionHistoryRoute = AppProspectionHistoryRouteImport.update({
+  id: '/prospection-history',
+  path: '/prospection-history',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuoteGeneratorRoute = AppQuoteGeneratorRouteImport.update({
+  id: '/quote-generator',
+  path: '/quote-generator',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppServiceClientRoute = AppServiceClientRouteImport.update({
   id: '/service-client',
   path: '/service-client',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppServicesRoute = AppServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const FCodeRoute = FCodeRouteImport.update({
+  id: '/f/$code',
+  path: '/f/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppFormsIndexRoute = AppFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFormsIdRoute = AppFormsIdRouteImport.update({
+  id: '/forms/$id',
+  path: '/forms/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProspectsIndexRoute = AppProspectsIndexRouteImport.update({
@@ -57,70 +119,153 @@ const AppProspectsIdRoute = AppProspectsIdRouteImport.update({
   path: '/prospects/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppQuotesIndexRoute = AppQuotesIndexRouteImport.update({
+  id: '/quotes/',
+  path: '/quotes/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuotesIdRoute = AppQuotesIdRouteImport.update({
+  id: '/quotes/$id',
+  path: '/quotes/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
   '/conversations': typeof AppConversationsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/email': typeof AppEmailRoute
   '/knowledge': typeof AppKnowledgeRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/prospection-history': typeof AppProspectionHistoryRoute
+  '/quote-generator': typeof AppQuoteGeneratorRoute
   '/service-client': typeof AppServiceClientRoute
+  '/services': typeof AppServicesRoute
+  '/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
+  '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
+  '/quotes/$id': typeof AppQuotesIdRoute
+  '/forms/': typeof AppFormsIndexRoute
   '/prospects/': typeof AppProspectsIndexRoute
+  '/quotes/': typeof AppQuotesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof AppActivityRoute
   '/conversations': typeof AppConversationsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/email': typeof AppEmailRoute
   '/knowledge': typeof AppKnowledgeRoute
+  '/notifications': typeof AppNotificationsRoute
+  '/prospection-history': typeof AppProspectionHistoryRoute
+  '/quote-generator': typeof AppQuoteGeneratorRoute
   '/service-client': typeof AppServiceClientRoute
+  '/services': typeof AppServicesRoute
+  '/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
+  '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
+  '/quotes/$id': typeof AppQuotesIdRoute
+  '/forms': typeof AppFormsIndexRoute
   '/prospects': typeof AppProspectsIndexRoute
+  '/quotes': typeof AppQuotesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
+  '/_app/activity': typeof AppActivityRoute
   '/_app/conversations': typeof AppConversationsRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/email': typeof AppEmailRoute
   '/_app/knowledge': typeof AppKnowledgeRoute
+  '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/prospection-history': typeof AppProspectionHistoryRoute
+  '/_app/quote-generator': typeof AppQuoteGeneratorRoute
   '/_app/service-client': typeof AppServiceClientRoute
+  '/_app/services': typeof AppServicesRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/f/$code': typeof FCodeRoute
+  '/_app/forms/$id': typeof AppFormsIdRoute
   '/_app/prospects/$id': typeof AppProspectsIdRoute
+  '/_app/quotes/$id': typeof AppQuotesIdRoute
+  '/_app/forms/': typeof AppFormsIndexRoute
   '/_app/prospects/': typeof AppProspectsIndexRoute
+  '/_app/quotes/': typeof AppQuotesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/activity'
     | '/conversations'
     | '/dashboard'
+    | '/email'
     | '/knowledge'
+    | '/notifications'
+    | '/prospection-history'
+    | '/quote-generator'
     | '/service-client'
+    | '/services'
+    | '/settings'
+    | '/f/$code'
+    | '/forms/$id'
     | '/prospects/$id'
+    | '/quotes/$id'
+    | '/forms/'
     | '/prospects/'
+    | '/quotes/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/activity'
     | '/conversations'
     | '/dashboard'
+    | '/email'
     | '/knowledge'
+    | '/notifications'
+    | '/prospection-history'
+    | '/quote-generator'
     | '/service-client'
+    | '/services'
+    | '/settings'
+    | '/f/$code'
+    | '/forms/$id'
     | '/prospects/$id'
+    | '/quotes/$id'
+    | '/forms'
     | '/prospects'
+    | '/quotes'
   id:
     | '__root__'
     | '/'
     | '/_app'
+    | '/_app/activity'
     | '/_app/conversations'
     | '/_app/dashboard'
+    | '/_app/email'
     | '/_app/knowledge'
+    | '/_app/notifications'
+    | '/_app/prospection-history'
+    | '/_app/quote-generator'
     | '/_app/service-client'
+    | '/_app/services'
+    | '/_app/settings'
+    | '/f/$code'
+    | '/_app/forms/$id'
     | '/_app/prospects/$id'
+    | '/_app/quotes/$id'
+    | '/_app/forms/'
     | '/_app/prospects/'
+    | '/_app/quotes/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  FCodeRoute: typeof FCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -139,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/activity': {
+      id: '/_app/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof AppActivityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/conversations': {
       id: '/_app/conversations'
       path: '/conversations'
@@ -153,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/email': {
+      id: '/_app/email'
+      path: '/email'
+      fullPath: '/email'
+      preLoaderRoute: typeof AppEmailRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/knowledge': {
       id: '/_app/knowledge'
       path: '/knowledge'
@@ -160,11 +319,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppKnowledgeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/prospection-history': {
+      id: '/_app/prospection-history'
+      path: '/prospection-history'
+      fullPath: '/prospection-history'
+      preLoaderRoute: typeof AppProspectionHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quote-generator': {
+      id: '/_app/quote-generator'
+      path: '/quote-generator'
+      fullPath: '/quote-generator'
+      preLoaderRoute: typeof AppQuoteGeneratorRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/service-client': {
       id: '/_app/service-client'
       path: '/service-client'
       fullPath: '/service-client'
       preLoaderRoute: typeof AppServiceClientRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/services': {
+      id: '/_app/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof AppServicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/f/$code': {
+      id: '/f/$code'
+      path: '/f/$code'
+      fullPath: '/f/$code'
+      preLoaderRoute: typeof FCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/forms/': {
+      id: '/_app/forms/'
+      path: '/forms'
+      fullPath: '/forms/'
+      preLoaderRoute: typeof AppFormsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/forms/$id': {
+      id: '/_app/forms/$id'
+      path: '/forms/$id'
+      fullPath: '/forms/$id'
+      preLoaderRoute: typeof AppFormsIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/prospects/': {
@@ -181,25 +396,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProspectsIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/quotes/': {
+      id: '/_app/quotes/'
+      path: '/quotes'
+      fullPath: '/quotes/'
+      preLoaderRoute: typeof AppQuotesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quotes/$id': {
+      id: '/_app/quotes/$id'
+      path: '/quotes/$id'
+      fullPath: '/quotes/$id'
+      preLoaderRoute: typeof AppQuotesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppActivityRoute: typeof AppActivityRoute
   AppConversationsRoute: typeof AppConversationsRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppEmailRoute: typeof AppEmailRoute
   AppKnowledgeRoute: typeof AppKnowledgeRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
+  AppProspectionHistoryRoute: typeof AppProspectionHistoryRoute
+  AppQuoteGeneratorRoute: typeof AppQuoteGeneratorRoute
   AppServiceClientRoute: typeof AppServiceClientRoute
+  AppServicesRoute: typeof AppServicesRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppFormsIdRoute: typeof AppFormsIdRoute
   AppProspectsIdRoute: typeof AppProspectsIdRoute
+  AppQuotesIdRoute: typeof AppQuotesIdRoute
+  AppFormsIndexRoute: typeof AppFormsIndexRoute
   AppProspectsIndexRoute: typeof AppProspectsIndexRoute
+  AppQuotesIndexRoute: typeof AppQuotesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppActivityRoute: AppActivityRoute,
   AppConversationsRoute: AppConversationsRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppEmailRoute: AppEmailRoute,
   AppKnowledgeRoute: AppKnowledgeRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
+  AppProspectionHistoryRoute: AppProspectionHistoryRoute,
+  AppQuoteGeneratorRoute: AppQuoteGeneratorRoute,
   AppServiceClientRoute: AppServiceClientRoute,
+  AppServicesRoute: AppServicesRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppFormsIdRoute: AppFormsIdRoute,
   AppProspectsIdRoute: AppProspectsIdRoute,
+  AppQuotesIdRoute: AppQuotesIdRoute,
+  AppFormsIndexRoute: AppFormsIndexRoute,
   AppProspectsIndexRoute: AppProspectsIndexRoute,
+  AppQuotesIndexRoute: AppQuotesIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -207,6 +458,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  FCodeRoute: FCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

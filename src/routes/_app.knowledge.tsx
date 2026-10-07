@@ -39,7 +39,7 @@ function Page() {
   const [q, setQ] = useState("");
   const [edit, setEdit] = useState<Record<string, string> | null>(null);
   const [del, setDel] = useState<string | null>(null);
-  const lists = { faqs, kbDocs: docs, kbInfos: infos } as Record<Key, Record<string, string>[]>;
+  const lists = { faqs, kbDocs: docs, kbInfos: infos } as unknown as Record<Key, Record<string, string>[]>;
   const filt = (l: Record<string, string>[]) => l.filter((x) => JSON.stringify(x).toLowerCase().includes(q.toLowerCase()));
 
   const openNew = () => setEdit({ id: "", date: new Date().toISOString(), ...Object.fromEntries(SCHEMA[tab].fields.map((f) => [f.k, f.opts?.[0] ?? ""])) });

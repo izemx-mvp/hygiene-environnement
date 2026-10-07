@@ -326,7 +326,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               {crumbs.map((c, i) => (
                 <span key={i} className="flex items-center gap-1.5 truncate">
                   <span className="text-muted-foreground/50">/</span>
-                  {i === crumbs.length - 1 ? <span className="truncate font-semibold">{c}</span> : <Link to={`/${segs.slice(0, i + 1).join("/")}`} className="text-muted-foreground hover:text-foreground">{c}</Link>}
+                  {i === crumbs.length - 1 ? <span className="truncate font-semibold">{c}</span> : <Link to={`/${segs.slice(0, i + 1).join("/")}` as never} className="text-muted-foreground hover:text-foreground">{c}</Link>}
                 </span>
               ))}
             </nav>
