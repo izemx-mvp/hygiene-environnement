@@ -14,7 +14,11 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppConversationsRouteImport } from './routes/_app.conversations'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppKnowledgeRouteImport } from './routes/_app.knowledge'
+import { Route as AppProspectionHistoryRouteImport } from './routes/_app.prospection-history'
 import { Route as AppServiceClientRouteImport } from './routes/_app.service-client'
+import { Route as AppServicesRouteImport } from './routes/_app.services'
+import { Route as AppFormsIndexRouteImport } from './routes/_app.forms.index'
+import { Route as AppFormsIdRouteImport } from './routes/_app.forms.$id'
 import { Route as AppProspectsIndexRouteImport } from './routes/_app.prospects.index'
 import { Route as AppProspectsIdRouteImport } from './routes/_app.prospects.$id'
 
@@ -42,9 +46,29 @@ const AppKnowledgeRoute = AppKnowledgeRouteImport.update({
   path: '/knowledge',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProspectionHistoryRoute = AppProspectionHistoryRouteImport.update({
+  id: '/prospection-history',
+  path: '/prospection-history',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppServiceClientRoute = AppServiceClientRouteImport.update({
   id: '/service-client',
   path: '/service-client',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppServicesRoute = AppServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFormsIndexRoute = AppFormsIndexRouteImport.update({
+  id: '/forms/',
+  path: '/forms/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFormsIdRoute = AppFormsIdRouteImport.update({
+  id: '/forms/$id',
+  path: '/forms/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProspectsIndexRoute = AppProspectsIndexRouteImport.update({
@@ -63,8 +87,12 @@ export interface FileRoutesByFullPath {
   '/conversations': typeof AppConversationsRoute
   '/dashboard': typeof AppDashboardRoute
   '/knowledge': typeof AppKnowledgeRoute
+  '/prospection-history': typeof AppProspectionHistoryRoute
   '/service-client': typeof AppServiceClientRoute
+  '/services': typeof AppServicesRoute
+  '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
+  '/forms/': typeof AppFormsIndexRoute
   '/prospects/': typeof AppProspectsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -72,8 +100,12 @@ export interface FileRoutesByTo {
   '/conversations': typeof AppConversationsRoute
   '/dashboard': typeof AppDashboardRoute
   '/knowledge': typeof AppKnowledgeRoute
+  '/prospection-history': typeof AppProspectionHistoryRoute
   '/service-client': typeof AppServiceClientRoute
+  '/services': typeof AppServicesRoute
+  '/forms/$id': typeof AppFormsIdRoute
   '/prospects/$id': typeof AppProspectsIdRoute
+  '/forms': typeof AppFormsIndexRoute
   '/prospects': typeof AppProspectsIndexRoute
 }
 export interface FileRoutesById {
@@ -83,8 +115,12 @@ export interface FileRoutesById {
   '/_app/conversations': typeof AppConversationsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/knowledge': typeof AppKnowledgeRoute
+  '/_app/prospection-history': typeof AppProspectionHistoryRoute
   '/_app/service-client': typeof AppServiceClientRoute
+  '/_app/services': typeof AppServicesRoute
+  '/_app/forms/$id': typeof AppFormsIdRoute
   '/_app/prospects/$id': typeof AppProspectsIdRoute
+  '/_app/forms/': typeof AppFormsIndexRoute
   '/_app/prospects/': typeof AppProspectsIndexRoute
 }
 export interface FileRouteTypes {
@@ -94,8 +130,12 @@ export interface FileRouteTypes {
     | '/conversations'
     | '/dashboard'
     | '/knowledge'
+    | '/prospection-history'
     | '/service-client'
+    | '/services'
+    | '/forms/$id'
     | '/prospects/$id'
+    | '/forms/'
     | '/prospects/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -103,8 +143,12 @@ export interface FileRouteTypes {
     | '/conversations'
     | '/dashboard'
     | '/knowledge'
+    | '/prospection-history'
     | '/service-client'
+    | '/services'
+    | '/forms/$id'
     | '/prospects/$id'
+    | '/forms'
     | '/prospects'
   id:
     | '__root__'
@@ -113,8 +157,12 @@ export interface FileRouteTypes {
     | '/_app/conversations'
     | '/_app/dashboard'
     | '/_app/knowledge'
+    | '/_app/prospection-history'
     | '/_app/service-client'
+    | '/_app/services'
+    | '/_app/forms/$id'
     | '/_app/prospects/$id'
+    | '/_app/forms/'
     | '/_app/prospects/'
   fileRoutesById: FileRoutesById
 }
@@ -160,11 +208,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppKnowledgeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/prospection-history': {
+      id: '/_app/prospection-history'
+      path: '/prospection-history'
+      fullPath: '/prospection-history'
+      preLoaderRoute: typeof AppProspectionHistoryRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/service-client': {
       id: '/_app/service-client'
       path: '/service-client'
       fullPath: '/service-client'
       preLoaderRoute: typeof AppServiceClientRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/services': {
+      id: '/_app/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof AppServicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/forms/': {
+      id: '/_app/forms/'
+      path: '/forms'
+      fullPath: '/forms/'
+      preLoaderRoute: typeof AppFormsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/forms/$id': {
+      id: '/_app/forms/$id'
+      path: '/forms/$id'
+      fullPath: '/forms/$id'
+      preLoaderRoute: typeof AppFormsIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/prospects/': {
@@ -188,8 +264,12 @@ interface AppRouteChildren {
   AppConversationsRoute: typeof AppConversationsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppKnowledgeRoute: typeof AppKnowledgeRoute
+  AppProspectionHistoryRoute: typeof AppProspectionHistoryRoute
   AppServiceClientRoute: typeof AppServiceClientRoute
+  AppServicesRoute: typeof AppServicesRoute
+  AppFormsIdRoute: typeof AppFormsIdRoute
   AppProspectsIdRoute: typeof AppProspectsIdRoute
+  AppFormsIndexRoute: typeof AppFormsIndexRoute
   AppProspectsIndexRoute: typeof AppProspectsIndexRoute
 }
 
@@ -197,8 +277,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppConversationsRoute: AppConversationsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppKnowledgeRoute: AppKnowledgeRoute,
+  AppProspectionHistoryRoute: AppProspectionHistoryRoute,
   AppServiceClientRoute: AppServiceClientRoute,
+  AppServicesRoute: AppServicesRoute,
+  AppFormsIdRoute: AppFormsIdRoute,
   AppProspectsIdRoute: AppProspectsIdRoute,
+  AppFormsIndexRoute: AppFormsIndexRoute,
   AppProspectsIndexRoute: AppProspectsIndexRoute,
 }
 

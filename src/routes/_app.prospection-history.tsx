@@ -27,7 +27,8 @@ const tone: Record<string, string> = { "Question générale": "bg-muted text-mut
 
 function Page() {
   const dets = useStore((s) => s.detections);
-  const acts = useStore((s) => s.activities.filter((a) => a.category === "Prospection" || a.category === "IA"));
+  const allActs = useStore((s) => s.activities);
+  const acts = allActs.filter((a) => a.category === "Prospection" || a.category === "IA");
   const [busy, setBusy] = useState<string | null>(null);
   const replay = async (d: Detection) => {
     setBusy(d.id);

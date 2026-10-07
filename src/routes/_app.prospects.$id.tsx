@@ -37,7 +37,8 @@ function Page() {
   const conv = useStore((s) => s.conversations.find((c) => c.id === p?.convId));
   const forms = useStore((s) => s.forms);
   const acts = useStore((s) => s.activities);
-  const quotes = useStore((s) => s.quotes.filter((q) => q.prospectId === id));
+  const allQuotes = useStore((s) => s.quotes);
+  const quotes = allQuotes.filter((q) => q.prospectId === id);
   const navigate = useNavigate();
   const [tab, setTab] = useState("overview");
   const [sendOpen, setSendOpen] = useState(false);
