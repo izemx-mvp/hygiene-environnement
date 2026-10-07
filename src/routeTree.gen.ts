@@ -10,33 +10,117 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppConversationsRouteImport } from './routes/_app.conversations'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppKnowledgeRouteImport } from './routes/_app.knowledge'
+import { Route as AppServiceClientRouteImport } from './routes/_app.service-client'
+import { Route as AppProspectsIndexRouteImport } from './routes/_app.prospects.index'
+import { Route as AppProspectsIdRouteImport } from './routes/_app.prospects.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppConversationsRoute = AppConversationsRouteImport.update({
+  id: '/conversations',
+  path: '/conversations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppKnowledgeRoute = AppKnowledgeRouteImport.update({
+  id: '/knowledge',
+  path: '/knowledge',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppServiceClientRoute = AppServiceClientRouteImport.update({
+  id: '/service-client',
+  path: '/service-client',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProspectsIndexRoute = AppProspectsIndexRouteImport.update({
+  id: '/prospects/',
+  path: '/prospects/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProspectsIdRoute = AppProspectsIdRouteImport.update({
+  id: '/prospects/$id',
+  path: '/prospects/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/conversations': typeof AppConversationsRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/knowledge': typeof AppKnowledgeRoute
+  '/service-client': typeof AppServiceClientRoute
+  '/prospects/$id': typeof AppProspectsIdRoute
+  '/prospects/': typeof AppProspectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/conversations': typeof AppConversationsRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/knowledge': typeof AppKnowledgeRoute
+  '/service-client': typeof AppServiceClientRoute
+  '/prospects/$id': typeof AppProspectsIdRoute
+  '/prospects': typeof AppProspectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/conversations': typeof AppConversationsRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/knowledge': typeof AppKnowledgeRoute
+  '/_app/service-client': typeof AppServiceClientRoute
+  '/_app/prospects/$id': typeof AppProspectsIdRoute
+  '/_app/prospects/': typeof AppProspectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/conversations'
+    | '/dashboard'
+    | '/knowledge'
+    | '/service-client'
+    | '/prospects/$id'
+    | '/prospects/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/conversations'
+    | '/dashboard'
+    | '/knowledge'
+    | '/service-client'
+    | '/prospects/$id'
+    | '/prospects'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/conversations'
+    | '/_app/dashboard'
+    | '/_app/knowledge'
+    | '/_app/service-client'
+    | '/_app/prospects/$id'
+    | '/_app/prospects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +132,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/conversations': {
+      id: '/_app/conversations'
+      path: '/conversations'
+      fullPath: '/conversations'
+      preLoaderRoute: typeof AppConversationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/knowledge': {
+      id: '/_app/knowledge'
+      path: '/knowledge'
+      fullPath: '/knowledge'
+      preLoaderRoute: typeof AppKnowledgeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/service-client': {
+      id: '/_app/service-client'
+      path: '/service-client'
+      fullPath: '/service-client'
+      preLoaderRoute: typeof AppServiceClientRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/prospects/': {
+      id: '/_app/prospects/'
+      path: '/prospects'
+      fullPath: '/prospects/'
+      preLoaderRoute: typeof AppProspectsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/prospects/$id': {
+      id: '/_app/prospects/$id'
+      path: '/prospects/$id'
+      fullPath: '/prospects/$id'
+      preLoaderRoute: typeof AppProspectsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppConversationsRoute: typeof AppConversationsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppKnowledgeRoute: typeof AppKnowledgeRoute
+  AppServiceClientRoute: typeof AppServiceClientRoute
+  AppProspectsIdRoute: typeof AppProspectsIdRoute
+  AppProspectsIndexRoute: typeof AppProspectsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppConversationsRoute: AppConversationsRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppKnowledgeRoute: AppKnowledgeRoute,
+  AppServiceClientRoute: AppServiceClientRoute,
+  AppProspectsIdRoute: AppProspectsIdRoute,
+  AppProspectsIndexRoute: AppProspectsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
