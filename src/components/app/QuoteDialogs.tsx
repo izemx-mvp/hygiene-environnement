@@ -25,16 +25,19 @@ export function QuoteWorkflowDialog({ prospectId, open, onOpenChange }: { prospe
           <DialogDescription>{p.company} · {p.service}</DialogDescription>
         </DialogHeader>
         {!doneId ? (
+          <div className="space-y-3">
+          <div className="flex justify-end"><div className="max-w-[85%] rounded-2xl rounded-br-md bg-navy px-3.5 py-2 text-sm text-navy-foreground"><p className="text-[10px] font-bold uppercase opacity-70">WhatsApp · Imane</p>Génère le devis pour {p.name}.</div></div>
           <AiSteps
             key={String(open)}
-            steps={["Récupération du dossier", "Vérification des informations", "Vérification des tarifs", "Calculs", "Prévisualisation", "Génération PDF"]}
-            stepMs={650}
+            steps={["Identification du prospect", "Récupération de la prestation", "Récupération du formulaire complété", "Chargement des règles configurées", "Vérification des champs obligatoires", "Application des règles métier", "Calculs", "Génération du devis"]}
+            stepMs={550}
             onDone={() => {
               const q = actions.generateQuote(p.id);
               setDoneId(q.id);
               toast.success(`Devis ${q.ref} généré`, { description: `${p.company} — ${mad(quoteTotals(q).ttc)} TTC` });
             }}
           />
+          </div>
         ) : (
           quote && (
             <div className="animate-fade-up rounded-2xl border border-success/30 bg-success/5 p-5 text-center">

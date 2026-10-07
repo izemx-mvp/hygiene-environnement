@@ -34,7 +34,6 @@ const STEPS = ["Nouveau", "Formulaire envoyé", "Formulaire complété", "Prêt 
 function Page() {
   const { id } = Route.useParams();
   const p = useStore((s) => s.prospects.find((x) => x.id === id));
-  const conv = useStore((s) => s.conversations.find((c) => c.id === p?.convId));
   const forms = useStore((s) => s.forms);
   const acts = useStore((s) => s.activities);
   const allQuotes = useStore((s) => s.quotes);
@@ -54,7 +53,7 @@ function Page() {
     p.status === "Formulaire envoyé" ? "Relancer le client pour compléter le formulaire" :
     p.status === "Infos manquantes" ? "Compléter les informations manquantes puis marquer prêt" :
     p.status === "Formulaire complété" ? "Vérifier le dossier et le marquer prêt pour devis" :
-    p.status === "Prêt pour devis" ? "Générer le devis avec l'Agent IA" : "Suivre la réponse du client";
+    p.status === "Prêt pour devis" ? "Demander le devis à l'Agent IA via WhatsApp" : "Suivre la réponse du client";
 
   return (
     <div>
@@ -74,9 +73,7 @@ function Page() {
           <div className="flex flex-wrap gap-2 lg:max-w-md lg:justify-end">
             <Button variant="outline" size="sm" onClick={() => setSendOpen(true)}><ClipboardList /> Envoyer formulaire</Button>
             <Button variant="outline" size="sm" onClick={() => setEdit({ ...p })}><Pencil /> Modifier</Button>
-            <Button variant="outline" size="sm" disabled={!p.convId} onClick={() => navigate({ to: "/conversations", search: { c: p.convId! } })}><MessageCircle /> WhatsApp</Button>
             <Button variant="outline" size="sm" disabled={["Prêt pour devis", "Devis généré", "Devis envoyé"].includes(p.status)} onClick={() => { actions.markReady(p.id); toast.success("Dossier prêt pour devis"); }}><CheckCircle2 /> Prêt pour devis</Button>
-            <Button variant="premium" size="sm" disabled={p.status !== "Prêt pour devis"} onClick={() => setQuoteOpen(true)}><Wand2 /> Générer devis</Button>
             <Button variant="ghost" size="sm" onClick={() => setTab("history")}><History /> Historique</Button>
           </div>
         </div>
@@ -92,7 +89,7 @@ function Page() {
 
       <Tabs value={tab} onValueChange={setTab} className="mt-6">
         <TabsList className="flex-wrap">
-          <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger><TabsTrigger value="conv">Conversation</TabsTrigger><TabsTrigger value="form">Formulaire</TabsTrigger>
+          <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger><TabsTrigger value="form">Formulaire</TabsTrigger>
           <TabsTrigger value="info">Informations collectées</TabsTrigger><TabsTrigger value="docs">Documents</TabsTrigger><TabsTrigger value="history">Historique</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="mt-4 grid gap-4 lg:grid-cols-3">
@@ -110,23 +107,19 @@ function Page() {
           <div className="card-premium border-primary/30 bg-gradient-to-br from-accent to-card p-5">
             <p className="text-xs font-semibold uppercase tracking-wider text-primary">Prochaine action recommandée</p>
             <p className="mt-2 font-display text-lg font-semibold">{next}</p>
+            {p.status === "Prêt pour devis" && (
+              <div className="mt-3 rounded-xl border border-dashed border-primary/40 bg-card/70 p-3 text-xs">
+                <p className="flex items-center gap-1.5 font-semibold text-primary"><MessageCircle className="size-3.5" /> Instruction WhatsApp attendue</p>
+                <p className="mt-1 italic">« Génère le devis pour {p.name}. »</p>
+              </div>
+            )}
             <Button className="mt-4 w-full" variant="premium" onClick={() => {
               if (p.status === "Nouveau" || p.status === "Formulaire envoyé") setSendOpen(true);
               else if (p.status === "Prêt pour devis") setQuoteOpen(true);
               else if (p.status === "Formulaire complété" || p.status === "Infos manquantes") { actions.markReady(p.id); toast.success("Dossier prêt pour devis"); }
               else if (quotes[0]) navigate({ to: "/quotes/$id", params: { id: quotes[0].id } });
-            }}>Exécuter</Button>
+            }}>{p.status === "Prêt pour devis" ? "Simuler l'instruction WhatsApp (démo)" : "Exécuter"}</Button>
           </div>
-        </TabsContent>
-        <TabsContent value="conv" className="mt-4">
-          {conv ? (
-            <div className="card-premium space-y-3 bg-muted/30 p-5">
-              {conv.messages.map((m) => (
-                <div key={m.id} className={`flex ${m.from === "client" ? "" : "justify-end"}`}><div className={`max-w-[70%] rounded-2xl px-3.5 py-2 text-sm ${m.from === "client" ? "bg-card shadow-soft" : "bg-gradient-primary text-primary-foreground"}`}>{m.text}</div></div>
-              ))}
-              <Link to="/conversations" search={{ c: conv.id }} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">Ouvrir dans WhatsApp <ExternalLink className="size-3.5" /></Link>
-            </div>
-          ) : <EmptyState icon={<MessageCircle />} title="Pas de conversation" desc="Ce prospect n'a pas été créé depuis WhatsApp." />}
         </TabsContent>
         <TabsContent value="form" className="mt-4">
           <div className="card-premium p-5">
