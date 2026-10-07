@@ -32,11 +32,9 @@ const SCHEMA: Record<Key, { label: string; fields: { k: string; l: string; long?
 };
 
 function Page() {
-  const data = useStore((s) => ({ faqs: s.faqs, kbDocs: s.kbDocs, kbInfos: s.kbInfos }));
   const faqs = useStore((s) => s.faqs);
   const docs = useStore((s) => s.kbDocs);
   const infos = useStore((s) => s.kbInfos);
-  void data;
   const [tab, setTab] = useState<Key>("faqs");
   const [q, setQ] = useState("");
   const [edit, setEdit] = useState<Record<string, string> | null>(null);
