@@ -280,11 +280,11 @@ export const quoteTotals = (q: Pick<Quote, "lines" | "discount" | "tva">) => {
 };
 
 const nt: [Notification["type"], string, string, string][] = [
-  ["Nouveau prospect", "Nouveau prospect détecté", "Hicham Zemmouri — Boulangerie Le Fournil via WhatsApp", "/conversations"],
+  ["Nouveau prospect", "Nouveau prospect détecté", "Hicham Zemmouri — Boulangerie Le Fournil via WhatsApp", "/prospects"],
   ["Formulaire complété", "Formulaire complété", "Atlas Protection a complété l'Audit Hygiène", "/prospects/p-1"],
   ["Dossier prêt pour devis", "Dossier prêt pour devis", "Nova Hygiene — Audit Hygiène", "/quote-generator"],
   ["Devis généré", "Devis DEV-2026-0041 généré", "Par l'Agent Générateur de Devis", "/quotes"],
-  ["Intervention humaine requise", "Reprise manuelle demandée", "Nadia Fassi souhaite parler à un conseiller", "/conversations"],
+  ["Intervention humaine requise", "Reprise manuelle demandée", "Nadia Fassi souhaite parler à un conseiller", "/prospects"],
   ["Formulaire envoyé", "Formulaire envoyé", "Formation HSE envoyé à Youssef Alaoui", "/prospects/p-3"],
   ["Information manquante", "Information manquante", "Surface des locaux non renseignée — Oriental Pack", "/prospects/p-9"],
   ["Devis envoyé", "Devis envoyé par email", "DEV-2026-0035 envoyé à Karim Benali", "/quotes"],

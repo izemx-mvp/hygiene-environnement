@@ -246,7 +246,7 @@ export const actions = {
   takeover(convId: string) {
     const c = state.conversations.find((x) => x.id === convId)!;
     patchConv(convId, { status: "Humain" });
-    notify("Intervention humaine requise", "Prise de relais humain", `Vous avez repris la conversation avec ${c.name}`, "/conversations");
+    notify("Intervention humaine requise", "Prise de relais humain", `Vous avez repris la conversation avec ${c.name}`, "/notifications");
     log("Conversations", "Prise de relais humain", "Imane El Bijri", c.name, "IA en pause");
   },
   resumeAi: (convId: string) => patchConv(convId, { status: "IA active" }),

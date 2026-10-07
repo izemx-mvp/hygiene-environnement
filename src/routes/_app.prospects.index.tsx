@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { NewProspectDialog } from "@/components/app/AppShell";
 import { SendFormDialog } from "@/components/app/SendFormDialog";
-import { QuoteWorkflowDialog } from "@/components/app/QuoteDialogs";
 import type { Prospect } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -43,7 +42,6 @@ function Page() {
   const [view, setView] = useState<"table" | "cards">("table");
   const [np, setNp] = useState(false);
   const [sendFor, setSendFor] = useState<string | null>(null);
-  const [quoteFor, setQuoteFor] = useState<string | null>(null);
 
   const rows = useMemo(() => {
     const now = Date.now();
@@ -70,8 +68,6 @@ function Page() {
       <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
         <DropdownMenuItem onClick={() => navigate({ to: "/prospects/$id", params: { id: p.id } })}>Ouvrir la fiche</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setSendFor(p.id)}>Envoyer formulaire</DropdownMenuItem>
-        <DropdownMenuItem disabled={p.status !== "Prêt pour devis"} onClick={() => setQuoteFor(p.id)}>Générer devis</DropdownMenuItem>
-        {p.convId && <DropdownMenuItem onClick={() => navigate({ to: "/conversations", search: { c: p.convId! } })}>Voir conversation</DropdownMenuItem>}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -141,7 +137,6 @@ function Page() {
       </div>
       <NewProspectDialog open={np} onOpenChange={setNp} />
       <SendFormDialog prospectId={sendFor} open={!!sendFor} onOpenChange={(o) => !o && setSendFor(null)} />
-      <QuoteWorkflowDialog prospectId={quoteFor} open={!!quoteFor} onOpenChange={(o) => !o && setQuoteFor(null)} />
     </div>
   );
 }
